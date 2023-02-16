@@ -5,7 +5,7 @@ const Loader = ()=>{
 
 
     return(
-        <CircularProgress color="inherit" />
+        <CircularProgress size={90} color="success" />
     )
 }
 

@@ -3,16 +3,22 @@ import {Grid, Typography} from "@mui/material";
 import Loader from "../../Loader/Loader";
 
 const LoadingPage = () => {
-  return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Loader/>
-        <Typography variant={'h1'}>
-          {"در حال دریافت اطلاعات هستیم"}
-        </Typography>
-      </Grid>
-    </Grid>
-  )
+    return (
+        <Grid container>
+            <Grid item
+                  display={"flex"}
+                  flexDirection={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  xs={12}
+                  sx={{height: "95vh"}}>
+                <Loader/>
+                <Typography mt={3} variant={'h4'}>
+                    {"در حال دریافت اطلاعات هستیم"}
+                </Typography>
+            </Grid>
+        </Grid>
+    )
 }
 
 export default LoadingPage
