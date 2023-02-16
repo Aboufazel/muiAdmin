@@ -1,0 +1,14 @@
+
+.main_block{
+    background: var(--text-color-white);
+    padding: 8px 0;
+    display: flex;
+    border-radius: 3px;
+    border-top: 3px solid var(--primary-border-color);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.beard_crumb a{
+    text-decoration: none;
+    color: var(--color-secondary);
+}

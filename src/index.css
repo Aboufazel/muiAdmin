@@ -1,13 +1,47 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: #DFECF1 !important;
+}
+
+a{
+  color: white;
+  text-decoration: none;
+}
+
+*{
+  box-sizing: border-box;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family:'iran-sans'  ,
     monospace;
+}
+@font-face {
+  font-family: 'iran-sans' ;
+  src: url("./assets/fonts/IRANSansWeb(FaNum).woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'iran-sans' ;
+  src: url("./assets/fonts/IRANSansWeb(FaNum) Bold.woff");
+  font-weight: bold;
+}
+
+:root{
+  --color-primary:#222d32;
+  --hover-primary: #1c2528;
+  --color-secondary:#0D6DFD;
+  --color-dark:#1C1B1F;
+  --text-color-primary:#b8c7ce;
+  --text-color-secondary:#4b646f;
+  --text-color-white:#ffff;
+  --color-danger:#DC3545;
+  --color-success:#28A745;
+  --color-warning:#FFC107;
+  --background-color-primary:#ecf0f5;
+  --primary-border-color:#d2d6de;
+  --background-light-black:rgba(0, 0, 0, 0.1);
+  font-family: iran-sans;
+  direction: rtl;
 }

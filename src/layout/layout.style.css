@@ -1,0 +1,10 @@
+.outlet_header{
+    background: var(--color-dark);
+    padding: 25px;
+}
+
+.outlet_block{
+    font-family: iran-sans;
+    padding: 15px 0;
+    min-height: 100%;
+}
