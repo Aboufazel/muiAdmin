@@ -1,16 +1,47 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button,Grid, TextField, Typography} from "@mui/material";
 import permission from '../../assets/images/permission.png'
 import {Box} from "@mui/system";
+import {LoginApi} from "../../api/Services";
+import {useNavigate} from "react-router-dom";
+import useStorage from "../../hooks/storage";
 
 const Login = () => {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState(false);
+    const navigate = useNavigate();
+    const [authInfo, setAuthInfo] = useStorage("auth", {
+        userId: "",
+        accessToken: "",
+        isLogin: false,
+    })
+
+
+    const [state, setState] = useState({
+        email: "",
+        password: "",
+    });
+
+    const manageSubmit = (e) => {
+        e.preventDefault();
+        LoginApi(state.email, state.password)
+            .then(res => {
+                if (res.data.isSuccess === true) {
+                    setAuthInfo({
+                        userId: res.data.data.userId,
+                        accessToken: res.data.data.token,
+                        isLogin: true,
+                    });
+                    navigate("/");
+                } else {
+                    setMessage(res.data.message);
+                    setShowAlert(true);
+                    setTimeout(() => {
+                        setShowAlert(false)
+                    }, 1000)
+                }
+            })
+
     };
     return (<Grid container>
             <Grid
@@ -45,14 +76,16 @@ const Login = () => {
                     </Box>
                     <Box
                          component="form"
-                         onSubmit={handleSubmit}
+                         onSubmit={manageSubmit}
                          noValidate sx={{ mt: 1 }}>
                         <TextField
                             hiddenLabel
                             variant="filled"
                             size="medium"
+                            onChange={(e) => setState({...state, email: e.target.value})}
                             margin="normal"
                             required
+                            value={state.email}
                             fullWidth
                             id="email"
                             label="نام کاربری"
@@ -65,9 +98,11 @@ const Login = () => {
                             hiddenLabel
                             variant="filled"
                             size="medium"
+                            onChange={(e) => setState({...state, password: e.target.value})}
                             margin="normal"
                             required
                             fullWidth
+                            value={state.password}
                             color={"warning"}
                             name="password"
                             label="کلمه عبور"

@@ -7,24 +7,24 @@ import LoadingPage from "./Login/LoadingPage";
 import UserProfile from '../components/UserProFile/UserProfile';
 
 const IndexLayout = () => {
-    const [loading , setLoading]= useState(true)
-    useEffect(()=>{
-        setTimeout(()=>{
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        setTimeout(() => {
             setLoading(false)
-        } , 500)
-    } , [])
+        }, 500)
+    }, [])
 
-  return(
-    loading === true ? <LoadingPage/> : <Grid Container>
-        <Grid item xs={1}>
-            <SideMenu/>
-            <UserProfile/>
+    return (
+        loading === true ? <LoadingPage/> : <Grid display={"flex"} Container>
+            <Grid item xs={1}>
+                <SideMenu/>
+                <UserProfile/>
+            </Grid>
+            <Grid item xs={11}>
+                <Outlet/>
+            </Grid>
         </Grid>
-        <Grid item xs={12}>
-            <Outlet/>
-        </Grid>
-    </Grid>
-  )
+    )
 }
 
 export default IndexLayout;

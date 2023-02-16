@@ -19,7 +19,7 @@ const SideMenu = (props) => {
           borderRadius: 5,
           height: "95vh",
         }}
-        xs={1}
+        xs={12}
       >
         <Box
           display={"flex"}
