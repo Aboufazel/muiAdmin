@@ -15,12 +15,12 @@ const IndexLayout = () => {
     }, [])
 
     return (
-        loading === true ? <LoadingPage/> : <Grid display={"flex"} Container>
-            <Grid item xs={1}>
+        loading === true ? <LoadingPage/> : <Grid container>
+            <Grid  item xs={1}>
                 <SideMenu/>
                 <UserProfile/>
             </Grid>
-            <Grid item xs={11}>
+            <Grid marginX={2} item xs={10}>
                 <Outlet/>
             </Grid>
         </Grid>
