@@ -28,7 +28,7 @@ const MainCard = ({id, name, icon, price, link}) => {
                 {price}
             </Typography>
             <Link to={link}>
-                <Button fullWidth color={"warning"} variant={"contained"}>
+                <Button fullWidth  variant={"contained"}>
                     {"مشاهده"}
                 </Button>
             </Link>

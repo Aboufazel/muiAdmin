@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import NestedList from "../NestedList/NestedList";
+import {Link} from "react-router-dom";
 
 const SideMenu = (props) => {
   return (
@@ -30,9 +31,11 @@ const SideMenu = (props) => {
           marginBottom={3}
         >
           <DashboardIcon />
-          <Typography sx={{fontSize:14}} variant="h6" component="h6">
-             {"داشبورد"}
-          </Typography>
+           <Link to={'/'}>
+               <Typography sx={{color:'black' ,fontSize:14}} variant="h6" component="h6">
+                   {"داشبورد"}
+               </Typography>
+           </Link>
         </Box>
         <NestedList />
         <Typography sx={{fontSize:8 , fontWeight:200 , position:"absolute" , bottom:25}} variant="p">

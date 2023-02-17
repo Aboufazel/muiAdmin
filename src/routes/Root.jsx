@@ -4,6 +4,7 @@ import IndexLayout from "../layout/IndexLayout";
 import Main from "../layout/Main/Main";
 import Login from "../layout/Login/Login";
 import AuthProvider from "../components/AuthProvider/AuthProvider";
+import AllUser from "../layout/AllUsers/AllUser";
 
 
 const Root = () => {
@@ -30,7 +31,16 @@ const Root = () => {
                                 </AuthProvider>
                             </Suspense>
                         )
-                    }
+                    }, {
+                        path: '/users',
+                        element: (
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <AuthProvider>
+                                    <AllUser/>
+                                </AuthProvider>
+                            </Suspense>
+                        )
+                    },
                 ]
 
             }

@@ -19,11 +19,13 @@ export const LoginApi = (username, password) => {
 
 
 //use for get All contact
-export const GetAllFromUser = (userid, token) => {
+export const GetAllFromUser = () => {
+    const data = localStorage.getItem("auth")
+    const final = JSON.parse(data);
     return Api.get(`/UserService/api/Users/getall`, {
         headers: {
-            "selfuserid": `${userid}`,
-            "token": `${token}`
+            "selfuserid": `${final.userId}`,
+            "token": `${final.accessToken}`
         }
     })
 }
