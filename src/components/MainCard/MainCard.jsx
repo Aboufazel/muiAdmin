@@ -1,14 +1,16 @@
-import {Box} from "@mui/system";
+import {Box, flexbox} from "@mui/system";
 import {Button, Icon, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import React from "react";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import Theme from "../Theme/Theme";
 
 const MainCard = ({id, name, icon, price, link}) => {
     const style = {
         bgcolor: '#D0E1E9',
         display: 'flex',
         flexDirection: 'column',
+        alignItems:'center',
         height: 200,
         boxShadow: '0 0 8px rgba(0,0,0,0.15)',
         width: 200,
@@ -20,11 +22,15 @@ const MainCard = ({id, name, icon, price, link}) => {
 
     return (
         <Box key={id} sx={style}>
-            <AccountBalanceWalletIcon fontSize={'large'}/>
+            <Box bgcolor={Theme.palette.primary.contrastText}
+                 sx={{display:'flex' , alignItems:'center' , justifyContent:'center' , padding:0.8 , borderRadius:50}}
+                 >
+                {icon}
+            </Box>
             <Typography fontWeight={"bold"} mt={2} fontSize={18} variant={"h4"}>
                 {name}
             </Typography>
-            <Typography sx={{color: '#ed6c02'}} marginY={3}>
+            <Typography sx={{color: '#ed6c02'}} marginY={2}>
                 {price}
             </Typography>
             <Link to={link}>
