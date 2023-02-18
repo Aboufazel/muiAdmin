@@ -20,9 +20,12 @@ const Main = () => {
 
 
 
+
     const manageUserTable = useCallback(async () => {
         const apiData = await GetAllFromUser().catch(() => setError(true));
         if (apiData.data.isSuccess === false) {
+            localStorage.clear();
+            navigate('/login')
             setLoading(true)
             setCall(true)
         } else {
@@ -42,6 +45,7 @@ const Main = () => {
 
     const storageData = JSON.parse(localStorage.getItem('auth'));
     const navigate = useNavigate();
+    console.log(storageData);
 
     const style = {
         bgcolor: '#D0E1E9',

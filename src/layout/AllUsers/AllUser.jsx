@@ -1,18 +1,18 @@
 
-import {GiveIdContext} from "../../Context/GiveId"
-
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {deleteUser, GetAllFromUser, GetById} from "../../api/Services";
 import {useNavigate} from "react-router-dom";
-import {Grid} from "@mui/material";
-import {CardData} from "../../data/Database/CardData";
-import MainCard from "../../components/MainCard/MainCard";
+import {Grid, Tooltip, Typography} from "@mui/material";
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import SpinnerLoader from "../../Loader/SpinerLoader";
+import UserShowBox from "../../components/UserShowBox/UserShowBox";
 
 
 
 const AllUser = () => {
     const [id, setId] = useState({});
-    const {state , dispatch} = useContext(GiveIdContext)
     const [token, setToken] = useState({});
     const [data, setData] = useState(undefined)
 
@@ -44,28 +44,8 @@ const AllUser = () => {
     }, [call])
 
 
-    const manageEditUser = async (userid) => {
-        setLoading(true)
-        const user = await GetById(userid);
-        if (user.data.rows === 0) {
-            alert("پاسخی از سمت سرور دریافت نشد")
-            setLoading(false)
-        } else if (user.data.rows !== 0) {
-            dispatch({type: 'UserData' , payload:user})
-            setLoading(false)
-            navigate("/editUser")
-        }
-    }
 
 
-    const manageDelete = async (userid) => {
-        const item = await deleteUser(userid , token);
-        if(item === undefined){
-            alert("حذف با مشکل مواجه شد")
-        }else {
-            alert("عملیات با موفقیت انجام شد")
-        }
-    }
 
 
     useEffect(() => {
@@ -76,11 +56,51 @@ const AllUser = () => {
         manageUserTable()
     }, [call])
 
+    const style = {
+        bgcolor: '#D0E1E9',
+        display: 'flex',
+        flexDirection: 'column',
+        height:420,
+        overflowY:'scroll',
+        boxShadow: '0 0 8px rgba(0,0,0,0.15)',
+        width: 1130,
+        padding: 3,
+        borderRadius: 5,
+        marginX: 2,
+        marginY:4,
+    };
+
 
     return (
         <Grid container margin={2} item>
             <Grid display={"flex"} xs={12}>
-               allUser
+                <Grid sx={style} >
+                    <Typography marginBottom={2} fontSize={18} fontWeight={"bold"} variant={'h5'}>
+                        {"کاربران سامانه"}
+                    </Typography>
+                    <Grid>
+                        {
+                            loading === true ?
+                                <Box width={'100%'}
+                                     justifyContent={"center"}
+                                     display={'flex'}>
+                                    <SpinnerLoader/>
+                                </Box>
+                                : data.map(item => (
+                                    <Grid key={item.userId}>
+                                        <UserShowBox username={item.userName} active={item.status} user={item.kind}  email={item.email} mobile={item.mobile}/>
+                                    </Grid>
+                                ))
+                        }
+                    </Grid>
+                </Grid>
+               <Tooltip leaveDelay={50} title={"افزودن کاربر"} arrow>
+                   <Box sx={{ '& > :not(style)': { m: 1 } , position:'absolute' , m:2 , bottom:0 , left:0 }}>
+                       <Fab color="secondary" aria-label="add">
+                           <AddIcon fontSize={"large"} />
+                       </Fab>
+                   </Box>
+               </Tooltip>
             </Grid>
         </Grid>
     )

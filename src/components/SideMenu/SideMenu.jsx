@@ -4,6 +4,8 @@ import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import NestedList from "../NestedList/NestedList";
 import {Link} from "react-router-dom";
+import ThemeChanger from "../ThemeChanger/ThemeChanger";
+import Theme from "../Theme/Theme";
 
 const SideMenu = (props) => {
   return (
@@ -13,7 +15,7 @@ const SideMenu = (props) => {
         flexDirection={"column"}
         alignItems={"center"}
         sx={{
-          background: "black",
+          background: Theme.palette.primary.main,
           color: "white",
           margin: 2,
           padding: 2,
@@ -38,6 +40,9 @@ const SideMenu = (props) => {
            </Link>
         </Box>
         <NestedList />
+          <Box sx={{fontSize:8 , fontWeight:200 , position:"absolute" , right:23 , bottom:55}}>
+              <ThemeChanger/>
+          </Box>
         <Typography sx={{fontSize:8 , fontWeight:200 , position:"absolute" , bottom:25}} variant="p">
           {"version 0.1.1"}
         </Typography>

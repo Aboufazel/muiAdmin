@@ -1,5 +1,6 @@
 import {Box} from "@mui/system";
 import {Avatar, Button, FormControlLabel, FormGroup, Switch, Typography} from "@mui/material";
+import Theme from "../Theme/Theme";
 
 const UserShowBox = ({username , email , mobile , user , active}) => {
 
@@ -13,7 +14,10 @@ const UserShowBox = ({username , email , mobile , user , active}) => {
                  justifyContent={'center'}
                  bgcolor={"white"}
                  sx={{height:75 ,width:'100%' , borderRadius:3}}>
-                <Avatar sx={{fontSize:15 , bgcolor: "#ed6c02" }}>user</Avatar>
+                {
+                    user !== 4 ? <Avatar sx={{fontSize:12 , bgcolor: Theme.palette.error.main }}>admin</Avatar> :
+                        <Avatar sx={{fontSize:15 , bgcolor: Theme.palette.warning.main }}>user</Avatar>
+                }
                 <Typography fontSize={16} fontWeight={"bold"} variant={'h6'}>
                     {username}
                 </Typography>
