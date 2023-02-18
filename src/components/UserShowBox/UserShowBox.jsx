@@ -1,6 +1,8 @@
 import {Box} from "@mui/system";
-import {Avatar, Button, FormControlLabel, FormGroup, Switch, Typography} from "@mui/material";
+import {Avatar, FormControlLabel, FormGroup, IconButton, Switch, Typography} from "@mui/material";
 import Theme from "../Theme/Theme";
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeIcon from '@mui/icons-material/Mode';
 
 const UserShowBox = ({username , email , mobile , user , active}) => {
 
@@ -42,12 +44,12 @@ const UserShowBox = ({username , email , mobile , user , active}) => {
                     }
                 </FormGroup>
                 <Box display={"flex"} gap={2}>
-                    <Button variant={"contained"} color={"warning"}>
-                        {'ویرایش'}
-                    </Button>
-                    <Button variant={"contained"} color={"error"}>
-                        {'حذف'}
-                    </Button>
+                    <IconButton aria-label="delete" size="large">
+                        <ModeIcon color={"warning"} fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" size="large">
+                        <DeleteIcon color={"error"} fontSize="inherit" />
+                    </IconButton>
                 </Box>
             </Box>
         </Box>

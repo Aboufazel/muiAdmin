@@ -56,7 +56,7 @@ const Login = () => {
     };
     return (<Grid container>
         {showAlert === true ?
-            <Box position={"absolute"} top={10} right={10}>
+            <Box position={"absolute"} sx={{transition:0.5}} top={10} right={10}>
                 <Alert variant="filled"  severity="error">
                     {message}
                 </Alert>

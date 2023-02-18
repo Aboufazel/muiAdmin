@@ -96,7 +96,7 @@ const AllUser = () => {
                 </Grid>
                <Tooltip leaveDelay={50} title={"افزودن کاربر"} arrow>
                    <Box sx={{ '& > :not(style)': { m: 1 } , position:'absolute' , m:2 , bottom:0 , left:0 }}>
-                       <Fab color="secondary" aria-label="add">
+                       <Fab color="error" aria-label="add">
                            <AddIcon fontSize={"large"} />
                        </Fab>
                    </Box>
