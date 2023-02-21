@@ -11,7 +11,7 @@ const Theme = createTheme({
             contrastText: '#fff',
         },
         secondary:{
-            main:'#DFECF1',
+            main:'#D0E1E9',
         },
 
         success:{
@@ -27,7 +27,7 @@ const Theme = createTheme({
     
     typography:{
         fontFamily:"iran-sans"
-    }
+    },
 })
 
 

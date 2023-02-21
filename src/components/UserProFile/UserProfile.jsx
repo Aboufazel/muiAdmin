@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box} from "@mui/system";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -12,27 +12,12 @@ import {useNavigate} from "react-router-dom";
 import useStorage from "../../hooks/storage";
 import Exit from '../../assets/images/exit.png'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-
+import {style} from '../../components/ModalStyle/ModakStyle'
 const UserProfile = () => {
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        borderRadius:2,
-        boxShadow: 24,
-        p: 4,
-    };
 
 
     const [open, setOpen] = React.useState(true);
-    const [openModal, setOpenModal] = React.useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
@@ -60,7 +45,7 @@ const UserProfile = () => {
 
     return (
         <>
-            <div>
+            <Box>
                 <Modal
                     open={openModal}
                     onClose={handleCloseModal}
@@ -86,7 +71,7 @@ const UserProfile = () => {
                         </Box>
                     </Box>
                 </Modal>
-            </div>
+            </Box>
             <Box sx={{position: "absolute", marginTop:2 , top:0, left: 25}}>
                 <Box
                     display={"flex"}

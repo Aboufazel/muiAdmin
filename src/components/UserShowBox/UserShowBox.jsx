@@ -18,7 +18,8 @@ const UserShowBox = ({username , email , mobile , user , active}) => {
                  sx={{height:75 ,width:'100%' , borderRadius:3}}>
                 {
                     user !== 4 ? <Avatar sx={{fontSize:12 , bgcolor: Theme.palette.error.main }}>admin</Avatar> :
-                        <Avatar sx={{fontSize:15 , bgcolor: Theme.palette.warning.main }}>user</Avatar>
+                        <Avatar sx={{fontSize:15 , color:Theme.palette.warning.contrastText
+                            ,bgcolor: Theme.palette.warning.main }}>user</Avatar>
                 }
                 <Typography fontSize={16} fontWeight={"bold"} variant={'h6'}>
                     {username}

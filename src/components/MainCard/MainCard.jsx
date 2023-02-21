@@ -7,7 +7,7 @@ import Theme from "../Theme/Theme";
 
 const MainCard = ({id, name, icon, price, link}) => {
     const style = {
-        bgcolor: '#D0E1E9',
+        bgcolor: Theme.palette.secondary.main,
         display: 'flex',
         flexDirection: 'column',
         alignItems:'center',

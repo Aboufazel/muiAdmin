@@ -56,7 +56,7 @@ const AllUser = () => {
         manageUserTable()
     }, [call])
 
-    const style = {
+    const UserStyle = {
         bgcolor: '#D0E1E9',
         display: 'flex',
         flexDirection: 'column',
@@ -74,7 +74,7 @@ const AllUser = () => {
     return (
         <Grid container margin={2} item>
             <Grid display={"flex"} xs={12}>
-                <Grid sx={style} >
+                <Grid sx={UserStyle} >
                     <Typography marginBottom={2} fontSize={18} fontWeight={"bold"} variant={'h5'}>
                         {"کاربران سامانه"}
                     </Typography>

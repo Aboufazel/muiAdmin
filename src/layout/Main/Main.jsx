@@ -7,6 +7,8 @@ import UserShowBox from "../../components/UserShowBox/UserShowBox";
 import {GetAllFromUser} from "../../api/Services";
 import SpinnerLoader from "../../Loader/SpinerLoader";
 import {Box} from "@mui/system";
+import Theme from "../../components/Theme/Theme";
+import useStorage from "../../hooks/storage";
 
 const Main = () => {
 
@@ -16,9 +18,11 @@ const Main = () => {
     const [call, setCall] = useState(false)
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(true)
-
-
-
+    const [authInfo, setAuthInfo] = useStorage("auth", {
+        userId: "",
+        accessToken: "",
+        isLogin: false,
+    })
 
 
     const manageUserTable = useCallback(async () => {
@@ -42,27 +46,27 @@ const Main = () => {
     }, [call])
 
 
-
     const storageData = JSON.parse(localStorage.getItem('auth'));
     const navigate = useNavigate();
     console.log(storageData);
 
     const style = {
-        bgcolor: '#D0E1E9',
+        bgcolor: Theme.palette.secondary.main,
         display: 'flex',
         flexDirection: 'column',
-        height:420,
-        overflowY:'scroll',
+        height: 420,
+        overflowY: 'scroll',
         boxShadow: '0 0 8px rgba(0,0,0,0.15)',
         width: 1130,
         padding: 3,
         borderRadius: 5,
         marginX: 2,
-        marginY:4,
+        marginY: 4,
     };
 
     return (
         storageData.userId === "" ? () => {
+                setAuthInfo({isLogin: false})
                 localStorage.clear();
                 navigate('/login')
             }
@@ -75,7 +79,7 @@ const Main = () => {
                         ))
                     }
                 </Grid>
-                <Grid sx={style} >
+                <Grid sx={style}>
                     <Typography marginBottom={2} fontSize={18} fontWeight={"bold"} variant={'h5'}>
                         {"کاربران سامانه"}
                     </Typography>
@@ -88,10 +92,11 @@ const Main = () => {
                                     <SpinnerLoader/>
                                 </Box>
                                 : data.map(item => (
-                                <Grid key={item.userId}>
-                                    <UserShowBox username={item.userName} active={item.status} user={item.kind}  email={item.email} mobile={item.mobile}/>
-                                </Grid>
-                            ))
+                                    <Grid key={item.userId}>
+                                        <UserShowBox username={item.userName} active={item.status} user={item.kind}
+                                                     email={item.email} mobile={item.mobile}/>
+                                    </Grid>
+                                ))
                         }
                     </Grid>
                 </Grid>

@@ -98,7 +98,7 @@ const Login = () => {
                     noValidate sx={{mt: 1}}>
                     <TextField
                         hiddenLabel
-                        variant="filled"
+                        variant="outlined"
                         size="medium"
                         onChange={(e) => setState({...state, email: e.target.value})}
                         margin="normal"
@@ -111,10 +111,20 @@ const Login = () => {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        sx={{
+                            '& label': {
+                                transformOrigin: "right !important",
+                                left: "inherit !important",
+                                right: "1.75rem !important",
+                                fontSize: "small",
+                                color: "#807D7B",
+                                overflow: "unset",
+                            }
+                        }}
                     />
                     <TextField
                         hiddenLabel
-                        variant="filled"
+                        variant="outlined"
                         size="medium"
                         onChange={(e) => setState({...state, password: e.target.value})}
                         margin="normal"
@@ -127,6 +137,16 @@ const Login = () => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        sx={{
+                            '& label': {
+                                transformOrigin: "right !important",
+                                left: "inherit !important",
+                                right: "1.75rem !important",
+                                fontSize: "small",
+                                color: "#807D7B",
+                                overflow: "unset",
+                            }
+                        }}
                     />
                     {
                         loading === false ? <Button

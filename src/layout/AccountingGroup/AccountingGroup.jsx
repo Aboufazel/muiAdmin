@@ -1,5 +1,3 @@
-import {Alert, Breadcrumb, Button, Col, Container, Modal, Row} from "react-bootstrap";
-import FilterBox from "../../components/FilterBox/FilterBox";
 import {
     AddAccountGroup,
     DeleteAccountGroup,
@@ -7,17 +5,25 @@ import {
     EditIsActive,
     GetAllAccountGroup, GetById
 } from "../../api/AccountGroup";
-import '../../components/CustomTable/table.style.css'
-import {useContext, useEffect, useState} from "react";
-import ActionTableButton from "../../components/ActionTableButton/ActionTableButton";
-import {faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
+import React, {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import "../../components/CustomModal/modal.style.css"
 import {GiveIdContext} from "../../Context/GiveId";
-import Loader from "../../Loader/Loader";
+import {Button, Grid, Modal, TextField, Tooltip, Typography} from "@mui/material";
+import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import Wallet from "../../assets/images/wallet.png";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import SaveIcon from '@mui/icons-material/Save';
+import {style} from '../../components/ModalStyle/ModakStyle'
+import SpinnerLoader from "../../Loader/SpinerLoader";
+import AccountShowCard from "../../components/AccountShowCard/AccountShowCard";
+import {Alert} from "@mui/lab";
 
 
 const AccountingGroup = () => {
+    const [showAlert, setShowAlert] = useState(false);
     const {state, dispatch} = useContext(GiveIdContext)
     const [account, setAccount] = useState(undefined);
     const [error, setError] = useState(false);
@@ -26,7 +32,6 @@ const AccountingGroup = () => {
     const [show, setShow] = useState(false);
     const [editShow, setEditShow] = useState(false);
     const [errorShow, setErrorShow] = useState(false);
-    const [successShow, setSuccessShow] = useState(false);
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [reload, setReload] = useState(false);
@@ -42,7 +47,7 @@ const AccountingGroup = () => {
         emptyInput()
     };
 
-    const handleDeleteClose = ()=>{
+    const handleDeleteClose = () => {
         setDeleteModalShow(false);
     }
 
@@ -77,17 +82,18 @@ const AccountingGroup = () => {
 
 
     const manageAddAccount = async () => {
+        console.log(value.code)
         setWaiting(true)
         const addResponse = await AddAccountGroup(value.code, value.name);
         if (addResponse.data.isSuccess === true) {
             setMessage(addResponse.data.message);
             setShow(false);
             setWaiting(false);
-            setSuccessShow(true);
+            setShowAlert(true);
             setReload(!reload);
             emptyInput();
             setTimeout(() => {
-                setSuccessShow(false)
+                setShowAlert(false);
             }, 2500)
         } else {
             setMessage(addResponse.data.message);
@@ -129,11 +135,11 @@ const AccountingGroup = () => {
         if (sendEditResponse.data.isSuccess === true) {
             setLoading(!setReload(!reload));
             setWaiting(false)
-            setSuccessShow(true);
+            // setSuccessShow(true);
             setEditShow(false);
             setMessage(sendEditResponse.data.message);
             setTimeout(() => {
-                setSuccessShow(false);
+                // setSuccessShow(false);
             }, 2500)
         } else {
             setMessage(sendEditResponse.data.message);
@@ -160,14 +166,15 @@ const AccountingGroup = () => {
         } else if (removeResponse.data.isSuccess === true) {
             setMessage(removeResponse.data.message);
             setWaiting(false);
-            setSuccessShow(true);
+            // setSuccessShow(true);
             setReload(!reload);
             setTimeout(() => {
-                setSuccessShow(false);
+                // setSuccessShow(false);
                 setMessage("");
             }, 1000)
         }
     }
+
 
     const manageActive = async (id, active) => {
         setWaiting(true);
@@ -187,226 +194,141 @@ const AccountingGroup = () => {
         setValue({code: "", name: ""});
     };
 
-    const manageDeleteModal = (id)=>{
+    const manageDeleteModal = (id) => {
         setDeleteModalShow(true);
         setDeleteModal(id);
     }
 
+
+    const UserStyle = {
+        bgcolor: '#D0E1E9',
+        display: 'flex',
+        flexDirection: 'column',
+        height: 420,
+        overflowY: 'scroll',
+        boxShadow: '0 0 8px rgba(0,0,0,0.15)',
+        width: 1130,
+        padding: 3,
+        borderRadius: 5,
+        marginX: 2,
+        marginY: 4,
+    };
+
+
     return (
-        <Container>
-            <Row>
-                <Col>
-                    <Breadcrumb>
-                        <Breadcrumb.Item className={'beard_crumb'}>
-                            <Link to={'/'}>
-                                {'داشبورد'}
-                            </Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item active>
-                            {'گروه حساب'}
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
-            </Row>
-            <Row className={'main_block'}>
-                <Col>
-                    <Row>
-                        <Col>
-                            <p>
-                                {'گروه حساب'}
-                            </p>
-                            {
-                                waiting === true ?
-                                    <div style={{left:45}} className={'position-absolute'}>
-                                        <Loader/>
-                                    </div> : <div></div>
-                            }
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className={"position-relative"}>
-                            <Alert style={{position: "fixed", top: 0, left: 0, fontFamily: 'iran-sans'}}
-                                   variant={"danger"}
-                                   dismissible show={errorShow}>
-                                {message}
-                            </Alert>
-                            <Alert style={{position: "fixed", top: 0, left: 0, fontFamily: 'iran-sans'}}
-                                   variant={"success"}
-                                   dismissible show={successShow}>
-                                {message}
-                            </Alert>
-                        </Col>
-                    </Row>
-                    <Row className={"d-flex my-3 mb-5"}>
-                        <Col>
-                            <>
-                                <Button className={'btn_style'} onClick={handleShow}>
-                                    {"افزودن گروه حساب"}
+        <Grid container margin={2} item>
+            {showAlert === true ?
+                <Box position={"absolute"} sx={{transition:0.5}} bottom={100} left={45}>
+                    <Alert variant="filled"  severity="success">
+                        {message}
+                    </Alert>
+                </Box>
+                : <></>}
+            <Grid display={"flex"} xs={12}>
+                <Box>
+                    <Modal
+                        open={show}
+                        onClose={handleClose}
+                    >
+                        <Box sx={style}>
+                            <img width={60} src={Wallet} alt={"خروج"}/>
+                            <Typography fontWeight={"bold"} id="modal-modal-description" sx={{mt: 2}}>
+                                {"افزودن گروه حساب"}
+                            </Typography>
+                            <Box marginY={3}>
+                                <TextField
+                                    name={"code"}
+                                    onChange={manageChange}
+                                    value={value.code}
+                                    sx={{
+                                        '& label': {
+                                            transformOrigin: "right !important",
+                                            left: "inherit !important",
+                                            right: "1.75rem !important",
+                                            fontSize: "small",
+                                            color: "#807D7B",
+                                            overflow: "unset",
+                                        }
+                                    }}
+                                    id="filled-basic"
+                                    color={"warning"}
+                                    label="کد گروه:" variant="outlined"/>
+                            </Box>
+                            <Box>
+                                <TextField
+                                    name={"name"}
+                                    onChange={manageChange}
+                                    value={value.name}
+                                    marginY={3}
+                                    sx={{
+                                        '& label': {
+                                            transformOrigin: "right !important",
+                                            left: "inherit !important",
+                                            right: "1.75rem !important",
+                                            fontSize: "small",
+                                            color: "#807D7B",
+                                            fontWeight: 400,
+                                            overflow: "unset",
+                                        }
+                                    }}
+                                    id="filled-basic"
+                                    color={"warning"}
+                                    label="نام گروه:" variant="outlined"/>
+                            </Box>
+                            <Box mt={4} display={"flex"} gap={1}>
+                                <Button onClick={handleClose} variant={"contained"} color={'error'}>
+                                    <ListItemIcon sx={{color: "white", minWidth: 30}}>
+                                        <HighlightOffIcon/>
+                                    </ListItemIcon>
+                                    {"انصراف"}
                                 </Button>
-
-                                <Modal show={show} onHide={handleClose}>
-                                    <Modal.Header closeButton>
-                                        <Modal.Title className={'modal_title'}>
-                                            {"افزودن حساب"}
-                                        </Modal.Title>
-                                        {
-                                            waiting === true ? <Loader/> : <div></div>
-                                        }
-                                    </Modal.Header>
-                                    <Modal.Body class={'d-flex flex-column justify-content-start p-3'}>
-                                        <Row className={"my-3"}>
-                                            <Col className={"d-flex align-items-center col-12"}>
-                                                <label style={{fontFamily: 'iran-sans'}}
-                                                       className={"me-2"}>{"کد گروه:"}</label>
-                                                <input name={"code"} onChange={manageChange} value={value.code}
-                                                       className={'p-2'}/>
-                                            </Col>
-                                        </Row>
-                                        <Row className={"my-3"}>
-                                            <Col className={"d-flex align-items-center col-12"}>
-                                                <label style={{fontFamily: 'iran-sans'}}
-                                                       className={"me-2"}>{"نام گروه:"}</label>
-                                                <input name={"name"} onChange={manageChange} value={value.name}
-                                                       className={'p-2'}/>
-                                            </Col>
-                                        </Row>
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button className={'close_btn'} onClick={handleClose}>
-                                            {"بستن"}
-                                        </Button>
-                                        <Button onClick={() => manageAddAccount()} className={'save_btn'}>
-                                            {"ایجاد گروه"}
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal>
-                                <Modal show={editShow} onHide={handleEditClose}>
-                                    <Modal.Header closeButton>
-                                        <Modal.Title className={'modal_title'}>
-                                            {"ویرایش حساب"}
-                                        </Modal.Title>
-                                        {
-                                            waiting === true ? <Loader/> : <div></div>
-                                        }
-                                    </Modal.Header>
-                                    {loading === true ?
-                                        <div className={"d-flex w-100 justify-content-center"}><Loader/>
-                                        </div> :
-                                        <Modal.Body
-                                            class={'d-flex flex-column justify-content-start p-3'}>
-                                            <Row className={"my-3"}>
-                                                <Col className={"d-flex align-items-center col-12"}>
-                                                    <label style={{fontFamily: 'iran-sans'}}
-                                                           className={"me-2"}>{"کد گروه:"}</label>
-                                                    <input name={"code"} onChange={manageEditChange}
-                                                           value={edit.code} className={'p-2'}/>
-                                                </Col>
-                                            </Row>
-                                            <Row className={"my-3"}>
-                                                <Col className={"d-flex align-items-center col-12"}>
-                                                    <label style={{fontFamily: 'iran-sans'}}
-                                                           className={"me-2"}>{"نام گروه:"}</label>
-                                                    <input name={"name"} onChange={manageEditChange}
-                                                           value={edit.name} className={'p-2'}/>
-                                                </Col>
-                                            </Row>
-                                        </Modal.Body>
-                                    }
-                                    <Modal.Footer>
-                                        <Button className={'close_btn'} onClick={handleEditClose}>
-                                            {"بستن"}
-                                        </Button>
-                                        <Button onClick={() => manageSendEditAccount()} className={'save_btn'}>
-                                            {"ویرایش گروه"}
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal>
-                                <Modal style={{fontFamily: 'iran-sans'}} show={deleteModalShow} onHide={handleClose}>
-                                    <Modal.Body class={'d-flex flex-column justify-content-start p-3'}>
-                                        {"آیا از حذف حساب اطمینان دارید؟"}
-                                        <Row className={"d-flex flex-row justify-content-center"}>
-                                            <Col className={"d-flex flex-row-reverse gap-3 mt-3 flex-row justify-content-center col-12"}>
-                                                <Button className={'save_btn'} onClick={handleDeleteClose}>
-                                                    {"انصراف"}
-                                                </Button>
-                                                <Button className={'close_btn'} onClick={() => manageRemoveAccount(deleteModal)}>
-                                                    {"حذف"}
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </Modal.Body>
-                                </Modal>
-                            </>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <FilterBox/>
-                    </Row>
-                </Col>
-                <Row>
-                    <Col className={"d-flex p-5 w-100 col-12"}>
-                        <Row className={"overflow-scroll d-flex w-100"}>
-                            {account === undefined ?
-                                <div className={"d-flex w-100 justify-content-center"}><Loader/></div> :
-                                <table className={"table_block"}>
-                                    <thead>
-                                    <tr>
-                                        <td className={"p-2"}>
-                                            {"کد گروه حساب"}
-                                        </td>
-                                        <td className={"p-2"}>
-                                            {"نام گروه حساب"}
-                                        </td>
-                                        <td className={"p-2"}>
-                                            {"حساب های کل"}
-                                        </td>
-                                        <td className={"p-2"}>
-                                            {"وضعیت حساب"}
-                                        </td>
-                                        <td className={"p-2"}>
-                                            {"عملیات"}
-                                        </td>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {
-                                        account.map(item => (
-                                            <tr key={item.accountGroupId}>
-                                                <td className={"p-2"}>{item.accountGroupCode}</td>
-                                                <td className={"p-2"}>{item.accountGroupName}</td>
-                                                <td className={"p-2"}><Button
-                                                    onClick={() => manageAccountMain(item.accountGroupId)}
-                                                    variant={"warning"}>{"مشاهده"}</Button>
-                                                </td>
-                                                <td className={"p-2"}>{item.isActive === true ? <Button
-                                                    onClick={() => manageActive(item.accountGroupId, !item.isActive)}
-                                                    variant={"success"} value={true}>{"فعال"}</Button> : <Button
-                                                    onClick={() => manageActive(item.accountGroupId, !item.isActive)}
-                                                    variant={"secondary"} value={false}>{"غیر فعال"}</Button>}</td>
-                                                <td className={"d-flex justify-content-center gap-2 p-2"}>
-                                                    <ActionTableButton color={"--text-color-white"}
-                                                                       bgColor={"--color-warning"}
-                                                                       tooltip={"ویرایش"}
-                                                                       icon={faEdit}
-                                                                       onClick={() => manageEditAccount(item.accountGroupId)}/>
-
-                                                    <ActionTableButton color={"--text-color-white"}
-                                                                       bgColor={"--color-danger"}
-                                                                       tooltip={"حذف کاربر"}
-                                                                       icon={faTrash}
-                                                                       onClick={() => manageDeleteModal(item.accountGroupId)}/>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    }
-                                    </tbody>
-                                </table>
-                            }
-                        </Row>
-                    </Col>
-                </Row>
-            </Row>
-        </Container>
+                                <Button onClick={() => manageAddAccount()} variant={"contained"} color={'success'}>
+                                    <ListItemIcon sx={{color: "white", minWidth: 30}}>
+                                        <SaveIcon/>
+                                    </ListItemIcon>
+                                    {"ذخیره"}
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Modal>
+                </Box>
+                <Grid sx={UserStyle}>
+                    <Typography marginBottom={2} fontSize={18} fontWeight={"bold"} variant={'h5'}>
+                        {"گروه حساب"}
+                    </Typography>
+                    <Grid>
+                        {
+                            loading === true ?
+                                <Box width={'100%'}
+                                     justifyContent={"center"}
+                                     display={'flex'}>
+                                    <SpinnerLoader/>
+                                </Box>
+                                : account === undefined ? <Box width={'100%'}
+                                                               justifyContent={"center"}
+                                                               display={'flex'}>
+                                    <SpinnerLoader/>
+                                </Box> : account.map(item => (
+                                    <Grid key={item.accountGroupId}>
+                                        <AccountShowCard code={item.accountGroupCode}
+                                                         GroupName={item.accountGroupName}
+                                                         isActive={item.isActive}
+                                        />
+                                    </Grid>
+                                ))
+                        }
+                    </Grid>
+                </Grid>
+                <Tooltip leaveDelay={50} title={"افزودن گروه حساب"} arrow>
+                    <Box onClick={handleShow}
+                         sx={{'& > :not(style)': {m: 1}, position: 'absolute', m: 2, bottom: 0, left: 0}}>
+                        <Fab color="error" aria-label="add">
+                            <AddIcon fontSize={"large"}/>
+                        </Fab>
+                    </Box>
+                </Tooltip>
+            </Grid>
+        </Grid>
     )
 }
 

@@ -4,15 +4,15 @@ import {createTheme} from "@mui/material";
 const DarkTheme = createTheme({
     palette: {
         mode: 'dark',
-        background: {
-            default: "#DFECF1"
+        background:{
+          default:  '#424242'
         },
         primary:{
-            main: '#000000',
+            main: '#01579b',
             contrastText: '#fff',
         },
         secondary:{
-            main:'#DFECF1',
+            main:'#000',
         },
 
         success:{

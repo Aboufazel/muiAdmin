@@ -14,6 +14,9 @@ import PeopleIcon from "@mui/icons-material/People";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import {SideMenuCollapse, SideMenuData} from "../../data/Database/SideMenuData";
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import Theme from "../Theme/Theme";
 
 export default function NestedList() {
     const [open, setOpen] = React.useState(true);
@@ -26,35 +29,41 @@ export default function NestedList() {
         <List
             sx={{display: "flex", flexDirection: "column", alignItems: "center"}}
         >
-            <Link component={RouterLink} to={"/users"}>
-                <ListItemButton>
-                    <ListItemIcon sx={{color: "white", minWidth: 35}}>
-                        <PeopleIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="کاربران"/>
-                </ListItemButton>
-            </Link>
+
+            {
+                SideMenuData.map(item => (
+                    <Link key={item.id} component={RouterLink} to={item.link}>
+                        <ListItemButton>
+                            <ListItemIcon sx={{color: "white", minWidth: 35}}>
+                                {item.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={item.name}/>
+                        </ListItemButton>
+                    </Link>
+                ))
+            }
+
             <ListItemButton onClick={handleClick}>
-                <ListItemIcon sx={{color: "white", minWidth: 35}}>
+                <ListItemIcon sx={{color: Theme.palette.primary.contrastText, minWidth: 35}}>
                     <AccountBalanceIcon/>
                 </ListItemIcon>
                 <ListItemText primary="حساب"/>
-                {/* {open ? <ExpandLess /> : <ExpandMore />} */}
+                {/*{open ? <ExpandLess /> : <ExpandMore />} */}
             </ListItemButton>
             <Collapse in={!open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItemButton sx={{pl: 4}}>
-                        <ListItemIcon sx={{color: "white", minWidth: 35}}>
-                            <AccountBalanceWalletIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="گروه"/>
-                    </ListItemButton>
-                    <ListItemButton sx={{pl: 4}}>
-                        <ListItemIcon sx={{color: "white", minWidth: 35}}>
-                            <MenuBookIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="نوع"/>
-                    </ListItemButton>
+                    {
+                        SideMenuCollapse.map(item => (
+                            <Link key={item.id} component={RouterLink} to={item.link}>
+                                <ListItemButton sx={{pl: 4}}>
+                                    <ListItemIcon sx={{color: "white", minWidth: 35}}>
+                                        {item.icon}
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.name}/>
+                                </ListItemButton>
+                            </Link>
+                        ))
+                    }
                 </List>
             </Collapse>
         </List>
