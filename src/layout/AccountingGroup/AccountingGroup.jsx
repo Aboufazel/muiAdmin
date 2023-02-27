@@ -20,12 +20,13 @@ import {style} from '../../components/ModalStyle/ModakStyle'
 import SpinnerLoader from "../../Loader/SpinerLoader";
 import AccountShowCard from "../../components/AccountShowCard/AccountShowCard";
 import {Alert} from "@mui/lab";
+import DataTable from "../../components/DataTable/DataTable";
 
 
 const AccountingGroup = () => {
     const [showAlert, setShowAlert] = useState(false);
     const {state, dispatch} = useContext(GiveIdContext)
-    const [account, setAccount] = useState(undefined);
+    const [account, setAccount] = useState([]);
     const [error, setError] = useState(false);
     const [value, setValue] = useState({code: "", name: ""});
     const [edit, setEdit] = useState({id: "", code: "", name: "", active: ""});
@@ -65,24 +66,26 @@ const AccountingGroup = () => {
         setEdit({...edit, [e.target.name]: e.target.value});
     }
 
-    const AccountGroupGetTabel = async () => {
+    const AccountGroupGetTable = async () => {
         const data = await GetAllAccountGroup().catch(() => setError(true));
         console.log(data.data.accountGroups)
         if (data.data.isSuccess === false) {
             localStorage.clear();
             alert("نیاز به ورود مجدد دارید");
-            navigate('/login')
+            navigate('/login');
         }
-        setAccount(data.data.accountGroups)
+        setAccount(data.data.accountGroups);
+        // fetch('http://siavashma.ir/AccountGroupService/api/AccountGroups/getall')
+        //     .then(response => response.json())
+        //     .then(json => console.log(json))
     };
 
     useEffect(() => {
-        AccountGroupGetTabel();
+        AccountGroupGetTable();
     }, [reload]);
 
 
     const manageAddAccount = async () => {
-        console.log(value.code)
         setWaiting(true)
         const addResponse = await AddAccountGroup(value.code, value.name);
         if (addResponse.data.isSuccess === true) {
@@ -215,120 +218,133 @@ const AccountingGroup = () => {
     };
 
 
+    const AccountGroupColumn = [
+        {field: 'accountGroupId', headerName: 'User ID', width: 150},
+        {field: 'accountGroupName', headerName: 'Name', width: 150},
+    ]
+
+    const handleGetRowId = (e) => {
+        return e.uniId
+    }
+
     return (
-        <Grid container margin={2} item>
-            {showAlert === true ?
-                <Box position={"absolute"} sx={{transition:0.5}} bottom={100} left={45}>
-                    <Alert variant="filled"  severity="success">
-                        {message}
-                    </Alert>
-                </Box>
-                : <></>}
-            <Grid display={"flex"} xs={12}>
-                <Box>
-                    <Modal
-                        open={show}
-                        onClose={handleClose}
-                    >
-                        <Box sx={style}>
-                            <img width={60} src={Wallet} alt={"خروج"}/>
-                            <Typography fontWeight={"bold"} id="modal-modal-description" sx={{mt: 2}}>
-                                {"افزودن گروه حساب"}
-                            </Typography>
-                            <Box marginY={3}>
-                                <TextField
-                                    name={"code"}
-                                    onChange={manageChange}
-                                    value={value.code}
-                                    sx={{
-                                        '& label': {
-                                            transformOrigin: "right !important",
-                                            left: "inherit !important",
-                                            right: "1.75rem !important",
-                                            fontSize: "small",
-                                            color: "#807D7B",
-                                            overflow: "unset",
-                                        }
-                                    }}
-                                    id="filled-basic"
-                                    color={"warning"}
-                                    label="کد گروه:" variant="outlined"/>
-                            </Box>
-                            <Box>
-                                <TextField
-                                    name={"name"}
-                                    onChange={manageChange}
-                                    value={value.name}
-                                    marginY={3}
-                                    sx={{
-                                        '& label': {
-                                            transformOrigin: "right !important",
-                                            left: "inherit !important",
-                                            right: "1.75rem !important",
-                                            fontSize: "small",
-                                            color: "#807D7B",
-                                            fontWeight: 400,
-                                            overflow: "unset",
-                                        }
-                                    }}
-                                    id="filled-basic"
-                                    color={"warning"}
-                                    label="نام گروه:" variant="outlined"/>
-                            </Box>
-                            <Box mt={4} display={"flex"} gap={1}>
-                                <Button onClick={handleClose} variant={"contained"} color={'error'}>
-                                    <ListItemIcon sx={{color: "white", minWidth: 30}}>
-                                        <HighlightOffIcon/>
-                                    </ListItemIcon>
-                                    {"انصراف"}
-                                </Button>
-                                <Button onClick={() => manageAddAccount()} variant={"contained"} color={'success'}>
-                                    <ListItemIcon sx={{color: "white", minWidth: 30}}>
-                                        <SaveIcon/>
-                                    </ListItemIcon>
-                                    {"ذخیره"}
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Modal>
-                </Box>
-                <Grid sx={UserStyle}>
-                    <Typography marginBottom={2} fontSize={18} fontWeight={"bold"} variant={'h5'}>
-                        {"گروه حساب"}
-                    </Typography>
-                    <Grid>
-                        {
-                            loading === true ?
-                                <Box width={'100%'}
-                                     justifyContent={"center"}
-                                     display={'flex'}>
-                                    <SpinnerLoader/>
-                                </Box>
-                                : account === undefined ? <Box width={'100%'}
-                                                               justifyContent={"center"}
-                                                               display={'flex'}>
-                                    <SpinnerLoader/>
-                                </Box> : account.map(item => (
-                                    <Grid key={item.accountGroupId}>
-                                        <AccountShowCard code={item.accountGroupCode}
-                                                         GroupName={item.accountGroupName}
-                                                         isActive={item.isActive}
-                                        />
-                                    </Grid>
-                                ))
-                        }
-                    </Grid>
-                </Grid>
-                <Tooltip leaveDelay={50} title={"افزودن گروه حساب"} arrow>
-                    <Box onClick={handleShow}
-                         sx={{'& > :not(style)': {m: 1}, position: 'absolute', m: 2, bottom: 0, left: 0}}>
-                        <Fab color="error" aria-label="add">
-                            <AddIcon fontSize={"large"}/>
-                        </Fab>
-                    </Box>
-                </Tooltip>
-            </Grid>
-        </Grid>
+
+        <DataTable getRowId={handleGetRowId} columns={AccountGroupColumn} rows={account === undefined ? [] : account}
+                   loading={!account.length}/>
+
+        // <Grid container margin={2} item>
+        //     {showAlert === true ?
+        //         <Box position={"absolute"} sx={{transition:0.5}} bottom={100} left={45}>
+        //             <Alert variant="filled"  severity="success">
+        //                 {message}
+        //             </Alert>
+        //         </Box>
+        //         : <></>}
+        //     <Grid display={"flex"} xs={12}>
+        //         <Box>
+        //             <Modal
+        //                 open={show}
+        //                 onClose={handleClose}
+        //             >
+        //                 <Box sx={style}>
+        //                     <img width={60} src={Wallet} alt={"خروج"}/>
+        //                     <Typography fontWeight={"bold"} id="modal-modal-description" sx={{mt: 2}}>
+        //                         {"افزودن گروه حساب"}
+        //                     </Typography>
+        //                     <Box marginY={3}>
+        //                         <TextField
+        //                             name={"code"}
+        //                             onChange={manageChange}
+        //                             value={value.code}
+        //                             sx={{
+        //                                 '& label': {
+        //                                     transformOrigin: "right !important",
+        //                                     left: "inherit !important",
+        //                                     right: "1.75rem !important",
+        //                                     fontSize: "small",
+        //                                     color: "#807D7B",
+        //                                     overflow: "unset",
+        //                                 }
+        //                             }}
+        //                             id="filled-basic"
+        //                             color={"warning"}
+        //                             label="کد گروه:" variant="outlined"/>
+        //                     </Box>
+        //                     <Box>
+        //                         <TextField
+        //                             name={"name"}
+        //                             onChange={manageChange}
+        //                             value={value.name}
+        //                             marginY={3}
+        //                             sx={{
+        //                                 '& label': {
+        //                                     transformOrigin: "right !important",
+        //                                     left: "inherit !important",
+        //                                     right: "1.75rem !important",
+        //                                     fontSize: "small",
+        //                                     color: "#807D7B",
+        //                                     fontWeight: 400,
+        //                                     overflow: "unset",
+        //                                 }
+        //                             }}
+        //                             id="filled-basic"
+        //                             color={"warning"}
+        //                             label="نام گروه:" variant="outlined"/>
+        //                     </Box>
+        //                     <Box mt={4} display={"flex"} gap={1}>
+        //                         <Button onClick={handleClose} variant={"contained"} color={'error'}>
+        //                             <ListItemIcon sx={{color: "white", minWidth: 30}}>
+        //                                 <HighlightOffIcon/>
+        //                             </ListItemIcon>
+        //                             {"انصراف"}
+        //                         </Button>
+        //                         <Button onClick={() => manageAddAccount()} variant={"contained"} color={'success'}>
+        //                             <ListItemIcon sx={{color: "white", minWidth: 30}}>
+        //                                 <SaveIcon/>
+        //                             </ListItemIcon>
+        //                             {"ذخیره"}
+        //                         </Button>
+        //                     </Box>
+        //                 </Box>
+        //             </Modal>
+        //         </Box>
+        //         <Grid sx={UserStyle}>
+        //             <Typography marginBottom={2} fontSize={18} fontWeight={"bold"} variant={'h5'}>
+        //                 {"گروه حساب"}
+        //             </Typography>
+        //             <Grid>
+        //                 {
+        //                     loading === true ?
+        //                         <Box width={'100%'}
+        //                              justifyContent={"center"}
+        //                              display={'flex'}>
+        //                             <SpinnerLoader/>
+        //                         </Box>
+        //                         : account === undefined ? <Box width={'100%'}
+        //                                                        justifyContent={"center"}
+        //                                                        display={'flex'}>
+        //                             <SpinnerLoader/>
+        //                         </Box> : account.map(item => (
+        //                             <Grid key={item.accountGroupId}>
+        //                                 <AccountShowCard code={item.accountGroupCode}
+        //                                                  GroupName={item.accountGroupName}
+        //                                                  isActive={item.isActive}
+        //                                 />
+        //                             </Grid>
+        //                         ))
+        //                 }
+        //             </Grid>
+        //         </Grid>
+        //         <Tooltip leaveDelay={50} title={"افزودن گروه حساب"} arrow>
+        //             <Box onClick={handleShow}
+        //                  sx={{'& > :not(style)': {m: 1}, position: 'absolute', m: 2, bottom: 0, left: 0}}>
+        //                 <Fab color="error" aria-label="add">
+        //                     <AddIcon fontSize={"large"}/>
+        //                 </Fab>
+        //             </Box>
+        //         </Tooltip>
+        //     </Grid>
+        // </Grid>
     )
 }
 
